@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS `adm-conciergerie`;
+CREATE TABLE IF NOT EXISTS form (ID BINARY(16) PRIMARY KEY, date TIMESTAMP, property_type VARCHAR(10), surface INT, property_condition VARCHAR(10), mail VARCHAR(255), phone VARCHAR(20), notes TEXT);
