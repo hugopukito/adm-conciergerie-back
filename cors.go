@@ -7,11 +7,10 @@ import (
 func EnableCors(w *http.ResponseWriter, r *http.Request) string {
 	header := (*w).Header()
 
-	// Ajouter le dns du serveur et l'adresse du front en local
-
 	allowList := map[string]bool{
-		"http://localhost:8082":        true,
-		"https://adm-conciergerie.com": true,
+		"http://127.0.0.1:5500":             true,
+		"https://adm-conciergerie.com/back": true,
+		"http://151.80.155.148/back":        true,
 	}
 
 	if origin := r.Header.Get("Origin"); allowList[origin] {
