@@ -1,6 +1,7 @@
-package main
+package repository
 
 import (
+	"adame/entity"
 	"database/sql"
 	"log"
 	"time"
@@ -37,7 +38,7 @@ func InitDB() {
 	}
 }
 
-func FindForms() ([]Form, error) {
+func FindForms() ([]entity.Form, error) {
 	selectQuery := "SELECT bin_to_uuid(id), date, property_type, surface, property_condition, mail, phone, notes FROM form ORDER BY date DESC"
 
 	results, err := DB.Query(selectQuery)
@@ -45,10 +46,10 @@ func FindForms() ([]Form, error) {
 		return nil, err
 	}
 
-	var forms []Form
+	var forms []entity.Form
 
 	for results.Next() {
-		var form Form
+		var form entity.Form
 
 		err = results.Scan(&form.ID, &form.Date, &form.PropertyType, &form.Surface, &form.PropertyCondition, &form.Mail, &form.Phone, &form.Notes)
 		if err != nil {
@@ -61,7 +62,7 @@ func FindForms() ([]Form, error) {
 	return forms, nil
 }
 
-func InsertForm(form Form) (uuid.UUID, error) {
+func InsertForm(form entity.Form) (uuid.UUID, error) {
 	stmt, err := DB.Prepare("INSERT INTO form (id, date, property_type, surface, property_condition, mail, phone, notes) values (uuid_to_bin(?), ?, ?, ?, ?, ?, ?, ?)")
 
 	if err != nil {

@@ -1,6 +1,11 @@
 package main
 
+import (
+	"adame/repository"
+	"adame/router"
+)
+
 func main() {
-	InitDB()
-	InitRouter()
+	repository.InitDB()
+	router.InitRouter()
 }
