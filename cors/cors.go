@@ -8,7 +8,7 @@ func EnableCors(w *http.ResponseWriter, r *http.Request) string {
 	header := (*w).Header()
 
 	allowList := map[string]bool{
-		"http://127.0.0.1:5500":             true,
+		"http://localhost:5500":             true,
 		"https://adm-conciergerie.com/back": true,
 		"http://151.80.155.148/back":        true,
 		"http://adm-conciergerie.com/back": true,

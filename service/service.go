@@ -50,7 +50,7 @@ func PostForm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if (form.PropertyType != entity.House && form.PropertyType != entity.Apartment) || (form.PropertyCondition != entity.Renovate && form.PropertyCondition != entity.Decorate && form.PropertyCondition != entity.Ready || (form.Surface < 15)) {
-		errMsg := fmt.Sprintf("invalid PropertyType value: %s", form.PropertyType)
+		errMsg := fmt.Sprintf("invalid PropertyType || PropertyCondition || Surface: %s", form.PropertyType)
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		w.Write([]byte(errMsg))
 		return
