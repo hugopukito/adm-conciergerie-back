@@ -11,21 +11,31 @@ import (
 	"net/smtp"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/google/uuid"
 )
 
 var mailPwd string
+var mailFrom string
+var mailTo string
 
 func init() {
-	filePath := "pwd.txt"
+	filePath := "mail.txt"
 
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	mailPwd = string(content)
+	lines := strings.Split(string(content), "\n")
+	if len(lines) < 3 {
+		log.Fatal("Invalid file format")
+	}
+
+	mailPwd = lines[0]
+	mailFrom = lines[1]
+	mailTo = lines[2]
 }
 
 func GetForms(w http.ResponseWriter, r *http.Request) {
@@ -85,8 +95,6 @@ func PostForm(w http.ResponseWriter, r *http.Request) {
 }
 
 func sendMail(form entity.Form) {
-	from := "senderadame3@gmail.com"
-	to := "gogo26hugop@gmail.com"
 	smtpServer := "smtp.gmail.com"
 	smtpPort := 587
 
@@ -99,8 +107,8 @@ func sendMail(form entity.Form) {
 		"\r\n" +
 		body)
 
-	auth := smtp.PlainAuth("", from, mailPwd, smtpServer)
-	err := smtp.SendMail(smtpServer+":"+strconv.Itoa(smtpPort), auth, from, []string{to}, message)
+	auth := smtp.PlainAuth("", mailFrom, mailPwd, smtpServer)
+	err := smtp.SendMail(smtpServer+":"+strconv.Itoa(smtpPort), auth, mailFrom, []string{mailTo}, message)
 	if err != nil {
 		fmt.Println(err)
 		return
