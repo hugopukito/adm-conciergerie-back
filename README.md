@@ -1,5 +1,9 @@
 # Back
 
+## Set password in pwd.txt
+
+just create pwd.txt with password email gmail
+
 ## Systemd
 
 [Unit] Description=Go back-end

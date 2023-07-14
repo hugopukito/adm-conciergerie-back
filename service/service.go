@@ -8,9 +8,25 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/smtp"
+	"os"
+	"strconv"
 
 	"github.com/google/uuid"
 )
+
+var mailPwd string
+
+func init() {
+	filePath := "pwd.txt"
+
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	mailPwd = string(content)
+}
 
 func GetForms(w http.ResponseWriter, r *http.Request) {
 	if cors.EnableCors(&w, r) == "options" {
@@ -65,4 +81,28 @@ func PostForm(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Location", id.String())
 	w.WriteHeader(http.StatusCreated)
+	go sendMail(form)
+}
+
+func sendMail(form entity.Form) {
+	from := "senderadame3@gmail.com"
+	to := "gogo26hugop@gmail.com"
+	smtpServer := "smtp.gmail.com"
+	smtpPort := 587
+
+	subject := "New Property Form Submission"
+	body := fmt.Sprintf("Type de bien: %s\nSurface: %d sq. meters\nEtat du bien: %s\n"+
+		"Email: %s\nPhone: %s\nNotes: %s\n",
+		form.PropertyType, form.Surface, form.PropertyCondition,
+		form.Mail, form.Phone, form.Notes)
+	message := []byte("Subject: " + subject + "\r\n" +
+		"\r\n" +
+		body)
+
+	auth := smtp.PlainAuth("", from, mailPwd, smtpServer)
+	err := smtp.SendMail(smtpServer+":"+strconv.Itoa(smtpPort), auth, from, []string{to}, message)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
